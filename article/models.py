@@ -7,13 +7,15 @@ from user.models import User
 class Article(models.Model):
     title = models.CharField('제목', max_length=150)
     content = models.TextField('내용')
-    hits = models.PositiveIntegerField('조회수')
+    hits = models.PositiveIntegerField('조회수', default=0)
 
     created_at = models.DateTimeField('생성 날짜', auto_now_add=True)
     updated_at = models.DateTimeField('수정 날짜', auto_now=True)
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    article_like_user = models.ManyToManyField(User, through='article.ArticleLikeUser',
+                                               related_name='article_like_user')
 
     class Meta:
         db_table = 'article'
