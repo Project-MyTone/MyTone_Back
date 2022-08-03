@@ -52,7 +52,7 @@ class BoardArticleCreateSerializer(serializers.ModelSerializer):
     """
     title = serializers.CharField()
     content = serializers.CharField()
-    user = serializers.ReadOnlyField(source='user.username')
+    user = serializers.ReadOnlyField(source='user.id')
 
     class Meta:
         model = Article

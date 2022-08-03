@@ -11,6 +11,7 @@ from board.serializers import (
     BoardArticleListSerializer,
     BoardArticleCreateSerializer
 )
+from MyTone.utils.permissions import IsOwnerOrReadOnly
 
 
 class BoardListViewSet(mixins.ListModelMixin,
@@ -20,6 +21,7 @@ class BoardListViewSet(mixins.ListModelMixin,
     """
     queryset = Board.objects.all()
     serializer_class = BoardSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 class BoardArticleListCreateViewSet(mixins.ListModelMixin,
@@ -30,6 +32,8 @@ class BoardArticleListCreateViewSet(mixins.ListModelMixin,
     보드 아티클 생성
     뷰셋
     """
+    permission_classes = [IsOwnerOrReadOnly]
+
     def get_queryset(self):
         board_id = self.kwargs['board_id']
 
@@ -41,12 +45,12 @@ class BoardArticleListCreateViewSet(mixins.ListModelMixin,
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return BoardArticleListSerializer
-        else:
+        elif self.request.method == 'POST':
             return BoardArticleCreateSerializer
 
-    # @transaction.atomic()
-    # def create(self, request, *args, **kwargs):
-    #     return super().create(request, *args, **kwargs)
+    @transaction.atomic()
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(
