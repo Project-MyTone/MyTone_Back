@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
@@ -20,6 +21,19 @@ class ArticleListCreateViewSet(mixins.ListModelMixin,
     아티클 리스트 조회
     """
     queryset = Article.objects.all()
+
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            search = self.request.GET.get('search', '')
+
+            condition = Q()
+            if search:
+                condition.add(
+                    Q(title__icontains=search),
+                    Q.OR
+                )
+
+            return Article.objects.filter(condition)
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
