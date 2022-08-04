@@ -15,7 +15,7 @@ class Article(models.Model):
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article_like_user = models.ManyToManyField(User, through='article.ArticleLikeUser',
-                                               related_name='article_like_user')
+                                               related_name='article_like')
 
     class Meta:
         db_table = 'article'

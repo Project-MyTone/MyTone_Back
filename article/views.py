@@ -1,5 +1,6 @@
 from django.db import transaction
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
@@ -59,7 +60,7 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
     수정
     삭제
     """
-    lookup_url_kwarg = 'product_id'
+    lookup_url_kwarg = 'article_id'
 
     queryset = Article.objects.all()
 
@@ -70,6 +71,31 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
             return ArticleUpdateDeleteSerializer
 
     def partial_update(self, request, *args, **kwargs):
+        """
+        부분 수정
+        """
         kwargs['partial'] = True
-
         return self.update(request, *args, **kwargs)
+
+    @action(detail=True, methods=['post'])
+    def like(self, request, *args, **kwargs):
+        """
+        좋아요 기능
+        """
+        pk = kwargs['article_id']
+        user = request.user
+        article = get_object_or_404(Article, pk=pk)
+        print(article.article_like_user)
+
+        # 좋아요 취소
+        if article.article_like_user.filter(pk=user.id).exists():
+            article.article_like_user.remove(user.id)
+        # 좋아요 추가
+        else:
+            article.article_like_user.add(user.id)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+
+
