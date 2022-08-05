@@ -3,9 +3,21 @@ from rest_framework.exceptions import ValidationError
 
 from django.utils.translation import gettext_lazy as _
 
-from article.models import Article
+from article.models import Article, ArticleImage
 from user.serializers import UserSerializer
 from board.serializers import BoardSerializer
+
+
+class ArticleImageSerializer(serializers.ModelSerializer):
+    """
+    게시글에 등록할 이미지 시리얼라이저
+    """
+    class Meta:
+        model = ArticleImage
+        fields = [
+            'image',
+            'created_at'
+        ]
 
 
 class ArticleSerializer(serializers.ModelSerializer):
@@ -25,7 +37,7 @@ class ArticleSerializer(serializers.ModelSerializer):
             'hits',
             'created_at',
             'board',
-            'user'
+            'user',
         ]
 
 
@@ -36,6 +48,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
     title = serializers.CharField()
     content = serializers.CharField()
     user = serializers.ReadOnlyField(source='user.id')
+    images = ArticleImageSerializer(many=True, read_only=True)
 
     class Meta:
         model = Article
@@ -45,8 +58,16 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
             'content',
             'created_at',
             'board',
-            'user'
+            'user',
+            'images'
         ]
+
+    def create(self, validated_data):
+        images_data = self.context['request'].FILES
+        article = Article.objects.create(**validated_data)
+        for image_data in images_data.getlist('image'):
+            ArticleImage.objects.create(article=article, image=image_data)
+        return article
 
 
 class ArticleDetailSerializer(serializers.ModelSerializer):
@@ -56,6 +77,7 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
     article_like_user = serializers.SerializerMethodField(read_only=True)
     board = BoardSerializer(read_only=True)
     user = UserSerializer(read_only=True)
+    article_images = ArticleImageSerializer(many=True, read_only=True)
 
     def get_article_like_user(self, obj):
         return obj.article_like_user.count()
@@ -71,7 +93,8 @@ class ArticleDetailSerializer(serializers.ModelSerializer):
             'updated_at',
             'article_like_user',
             'board',
-            'user'
+            'user',
+            'article_images'
         ]
 
 

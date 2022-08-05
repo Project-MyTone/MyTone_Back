@@ -29,7 +29,7 @@ class ArticleImage(models.Model):
 
     created_at = models.DateTimeField('생성 날짜', auto_now_add=True)
 
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_images')
 
     class Meta:
         db_table = 'article_image'
