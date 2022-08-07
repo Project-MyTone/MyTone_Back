@@ -7,11 +7,13 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from article.models import Article
+from comment.models import Comment
 from article.serializers import (
     ArticleSerializer,
     ArticleDetailSerializer,
     ArticleCreateSerializer,
-    ArticleUpdateDeleteSerializer
+    ArticleUpdateDeleteSerializer,
+    ArticleCommentListSerializer
 )
 
 
@@ -95,6 +97,24 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
             article.article_like_user.add(user.id)
 
         return Response(status=status.HTTP_200_OK)
+
+
+class ArticleCommentListViewSet(mixins.ListModelMixin,
+                                viewsets.GenericViewSet):
+    """
+    게시글별 댓글 목록 조회
+    """
+    def get_queryset(self):
+        article_id = self.kwargs['article_id']
+        return Comment.objects \
+            .filter(article_id=article_id) \
+            .prefetch_related('user') \
+            .prefetch_related('article') \
+            .all()
+
+    def get_serializer_class(self):
+        return ArticleCommentListSerializer
+
 
 
 

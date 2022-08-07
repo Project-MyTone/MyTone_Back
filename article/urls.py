@@ -2,7 +2,8 @@ from django.urls import path
 
 from article.views import (
     ArticleListCreateViewSet,
-    ArticleDetailUpdateDeleteViewSet
+    ArticleDetailUpdateDeleteViewSet,
+    ArticleCommentListViewSet
 )
 
 
@@ -21,9 +22,14 @@ article_like = ArticleDetailUpdateDeleteViewSet.as_view({
     'post': 'like'
 })
 
+article_comment_list = ArticleCommentListViewSet.as_view({
+    'get': 'list'
+})
+
 
 urlpatterns = [
     path('', article_list, name='article_list'),
     path('<int:article_id>/', article_detail_update_delete),
     path('<int:article_id>/like', article_like),
+    path('<int:article_id>/comment/', article_comment_list),
 ]

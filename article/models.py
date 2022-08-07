@@ -25,11 +25,11 @@ class Article(models.Model):
 
 
 class ArticleImage(models.Model):
-    image = models.ImageField('이미지', upload_to='article/%Y/%m/%d')
+    image = models.ImageField('이미지', upload_to='article/%Y/%m/%d', blank=True, null=True)
 
     created_at = models.DateTimeField('생성 날짜', auto_now_add=True)
 
-    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='article_images')
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='images')
 
     class Meta:
         db_table = 'article_image'
