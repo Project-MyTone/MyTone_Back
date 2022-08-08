@@ -112,6 +112,9 @@ class ArticleUpdateDeleteSerializer(serializers.ModelSerializer):
             'content',
             'board',
         ]
+        read_only_fields = [
+            'board'
+        ]
 
 
 class ArticleImageCreateDelete(serializers.ModelSerializer):

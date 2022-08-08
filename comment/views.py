@@ -15,6 +15,7 @@ from comment.serializers import (
     ReCommentCreateSerializer,
     ReCommentDetailUpdateDeleteSerializer
 )
+from MyTone.utils.permissions import IsOwnerOrReadOnly
 
 
 class CommentListCreateViewSet(mixins.ListModelMixin,
@@ -24,6 +25,7 @@ class CommentListCreateViewSet(mixins.ListModelMixin,
     댓글 조회, 생성
     """
     queryset = Comment.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -44,6 +46,7 @@ class CommentDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
     """
     lookup_url_kwarg = 'comment_id'
     queryset = Comment.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         return CommentDetailUpdateDeleteSerializer
@@ -79,6 +82,7 @@ class ReCommentListCreateViewSet(mixins.ListModelMixin,
     대댓글 전체 조회, 생성
     """
     queryset = ReComment.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -101,6 +105,7 @@ class ReCommentDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
 
     queryset = ReComment.objects.all()
     serializer_class = ReCommentDetailUpdateDeleteSerializer
+    permission_classes = [IsOwnerOrReadOnly]
 
     def partial_update(self, request, *args, **kwargs):
         """

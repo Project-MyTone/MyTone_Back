@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from article.models import Article
 from comment.models import Comment
@@ -15,6 +16,7 @@ from article.serializers import (
     ArticleUpdateDeleteSerializer,
     ArticleCommentListSerializer
 )
+from MyTone.utils.permissions import IsOwnerOrReadOnly
 
 
 class ArticleListCreateViewSet(mixins.ListModelMixin,
@@ -24,6 +26,7 @@ class ArticleListCreateViewSet(mixins.ListModelMixin,
     아티클 리스트 조회
     """
     queryset = Article.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         if self.request.method == 'GET':
@@ -65,6 +68,7 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
     lookup_url_kwarg = 'article_id'
 
     queryset = Article.objects.all()
+    permission_classes = [IsOwnerOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -87,7 +91,6 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
         pk = kwargs['article_id']
         user = request.user
         article = get_object_or_404(Article, pk=pk)
-        print(article.article_like_user)
 
         # 좋아요 취소
         if article.article_like_user.filter(pk=user.id).exists():
@@ -104,6 +107,7 @@ class ArticleCommentListViewSet(mixins.ListModelMixin,
     """
     게시글별 댓글 목록 조회
     """
+
     def get_queryset(self):
         article_id = self.kwargs['article_id']
         return Comment.objects \
