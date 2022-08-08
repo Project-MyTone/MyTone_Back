@@ -17,6 +17,7 @@ from article.serializers import (
     ArticleCommentListSerializer
 )
 from MyTone.utils.permissions import IsOwnerOrReadOnly
+from MyTone.utils.pagination import ArticlePageNumberPagination
 
 
 class ArticleListCreateViewSet(mixins.ListModelMixin,
@@ -27,6 +28,7 @@ class ArticleListCreateViewSet(mixins.ListModelMixin,
     """
     queryset = Article.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
+    pagination_class = ArticlePageNumberPagination
 
     def get_queryset(self):
         if self.request.method == 'GET':
@@ -107,6 +109,7 @@ class ArticleCommentListViewSet(mixins.ListModelMixin,
     """
     게시글별 댓글 목록 조회
     """
+    pagination_class = ArticlePageNumberPagination
 
     def get_queryset(self):
         article_id = self.kwargs['article_id']
