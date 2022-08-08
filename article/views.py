@@ -1,6 +1,9 @@
+import socket
+
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.core.cache import cache
 
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
@@ -77,6 +80,35 @@ class ArticleDetailUpdateDeleteViewSet(mixins.RetrieveModelMixin,
             return ArticleDetailSerializer
         else:
             return ArticleUpdateDeleteSerializer
+
+    def retrieve(self, request, *args, **kwargs):
+        pk = self.kwargs['article_id']
+        article = get_object_or_404(Article, pk=pk)
+        expire_time = 600
+
+        user = self.request.user.id
+        # 인가되지 않은 사용자 접근
+        if user is None:
+            user = socket.gethostbyname(socket.gethostname())
+
+        # 캐싱을 이용해서 조회수 기능 구현
+        cache_value = cache.get(f'user-{user}', '_')
+        response = Response(status=status.HTTP_200_OK)
+
+        # 인가된 사용자의 조회수 증가
+        if f'_{pk}_' not in cache_value:
+            cache_value += f'{pk}_'
+            cache.set(f'user-{user}', cache_value, expire_time)
+            article.hits += 1
+            article.save()
+
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        response.data = serializer.data
+        return response
+
+
+
 
     def partial_update(self, request, *args, **kwargs):
         """
