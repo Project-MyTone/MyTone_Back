@@ -7,8 +7,8 @@ from article.models import Article
 class Comment(models.Model):
     body = models.TextField('댓글 내용')
 
-    reg_date = models.DateTimeField('생성 날짜', auto_now_add=True)
-    update_date = models.DateTimeField('수정 날짜', auto_now=True)
+    created_at = models.DateTimeField('생성 날짜', auto_now_add=True)
+    updated_at = models.DateTimeField('수정 날짜', auto_now=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
@@ -23,8 +23,8 @@ class Comment(models.Model):
 class ReComment(models.Model):
     body = models.TextField('대댓글 내용')
 
-    reg_date = models.DateTimeField('생성 날짜', auto_now_add=True)
-    update_date = models.DateTimeField('수정 날짜', auto_now=True)
+    created_at = models.DateTimeField('생성 날짜', auto_now_add=True)
+    updated_at = models.DateTimeField('수정 날짜', auto_now=True)
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)

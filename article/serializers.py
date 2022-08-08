@@ -137,8 +137,8 @@ class ArticleCommentListSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'body',
-            'reg_date',
-            'update_date',
+            'created_at',
+            'updated_at',
             'user',
             'article'
         ]
