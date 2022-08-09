@@ -14,8 +14,9 @@ class ImageViewSet(mixins.CreateModelMixin,
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-        print(serializer.data['image'])
-        personal_color.analysis(serializer.data['image'])
+        # result_image = personal_color.analysis(serializer.data['image'])
+
+
 
 
 
