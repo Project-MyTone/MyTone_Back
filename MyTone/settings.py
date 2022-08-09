@@ -209,7 +209,7 @@ STATIC_URL = 'static/'
 
 # 사용자가 업로드한 정적파일폴더 경로
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 # # 리액드와 연동하기 위한 미들웨어 설정
 # CORS_ALLOW_CREDENTIALS = True
