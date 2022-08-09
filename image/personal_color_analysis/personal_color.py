@@ -1,4 +1,3 @@
-import cv2
 import numpy as np
 from . import tone_analysis
 from .detect_face import DetectFace
