@@ -14,6 +14,10 @@ import environ
 import os
 from datetime import timedelta
 from pathlib import Path
+import pymysql
+
+
+pymysql.install_as_MySQLdb()
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -60,7 +64,6 @@ INSTALLED_APPS += [
     'board',
     'article',
     'comment',
-    'image',
     'color',
 ]
 
@@ -93,7 +96,7 @@ REST_FRAMEWORK = {
 # simple jwt 엑세스키와 리프레시키의 수명 설정
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(seconds=60 * 60),  # 엑세스 토큰 60분
-    'REFRESH_TOKEN_LIFETIME': timedelta(seconds=60 * 60 * 24 * 30),  # 리프레시 토큰 한달
+    'REFRESH_TOKEN_LIFETIME': timedelta(seconds=60 * 60 * 24 * 30),  # 리프레시 토큰 한
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
@@ -150,9 +153,9 @@ DATABASES = {
         'NAME': 'MyTone',
         'USER': 'root',
         'PASSWORD': '1234',
-        'HOST': '127.0.0.1',
+        # 'HOST': '127.0.0.1',
         'HOST': 'db',
-        # 'PORT': '3306',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
             'charset': 'utf8mb4',
@@ -205,7 +208,7 @@ AUTH_USER_MODEL = 'user.User'
 
 CORS_ALLOW_CREDENTIALS = True
 
-CSRF_TRUSTED_ORIGINS = ['*', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = []
 
 CORS_ORIGIN_WHITELIST = CSRF_TRUSTED_ORIGINS
 
