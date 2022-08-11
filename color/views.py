@@ -1,6 +1,5 @@
 from rest_framework import mixins, viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
 from color.serializers import (
     ColorSerializer,
@@ -19,6 +18,7 @@ class ColorListDetailViewSet(mixins.ListModelMixin,
 
     queryset = Color.objects.all()
     serializer_class = ColorSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CosmeticListDetailViewSet(mixins.ListModelMixin,
@@ -27,6 +27,7 @@ class CosmeticListDetailViewSet(mixins.ListModelMixin,
     컬러별 화장품 조회
     """
     serializer_class = CosmeticSerializer
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         color_id = self.kwargs['color_id']
