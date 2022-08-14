@@ -14,6 +14,10 @@ import environ
 import os
 from datetime import timedelta
 from pathlib import Path
+import pymysql
+
+
+pymysql.install_as_MySQLdb()
 
 env = environ.Env(
     DEBUG=(bool, False)
@@ -203,11 +207,9 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'user.User'
 
+CORS_ORIGIN_WHITELIST = ('http://localhost:3000', 'http://127.0.0.1:3000',)
+
 CORS_ALLOW_CREDENTIALS = True
-
-CSRF_TRUSTED_ORIGINS = ['*', 'localhost', '127.0.0.1']
-
-CORS_ORIGIN_WHITELIST = CSRF_TRUSTED_ORIGINS
 
 
 # Static files (CSS, JavaScript, Images)

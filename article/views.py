@@ -8,6 +8,7 @@ from django.core.cache import cache
 from rest_framework import mixins, viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from article.models import Article
@@ -32,6 +33,7 @@ class ArticleListCreateViewSet(mixins.ListModelMixin,
     queryset = Article.objects.all()
     permission_classes = [IsOwnerOrReadOnly]
     pagination_class = ArticlePageNumberPagination
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_queryset(self):
         if self.request.method == 'GET':
